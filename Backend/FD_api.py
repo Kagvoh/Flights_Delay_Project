@@ -32,7 +32,6 @@ class FlightInput(BaseModel):
     DayOfWeek: int
 
     CRSDepTime: int
-    CRSArrTime: int
 
     UniqueCarrier: str
     Origin: str
@@ -44,6 +43,24 @@ class FlightInput(BaseModel):
 # FEATURE ENGINEERING
 def convert_time_to_float(time_str):
     return time_str // 100 + (time_str % 100 )/ 60
+
+def calculate_arrival_time(dep_time, elapsed_minutes):
+
+    dep_hour = dep_time // 100
+    dep_min = dep_time % 100
+
+    total_minutes = (
+        dep_hour * 60
+        + dep_min
+        + elapsed_minutes
+    )
+
+    total_minutes %= 1440
+
+    arr_hour = total_minutes // 60
+    arr_min = total_minutes % 60
+
+    return arr_hour * 100 + arr_min
 
 def valid_time(t):
 
@@ -66,9 +83,20 @@ def get_period(time):
 # PREPROCESS DATA
 
 def preprocess_input(data):
+    
+    elapsed_time = int(route_elapsed.get(
+        (data.Origin, data.Dest),
+        180)
+    )
+
+    calculated_arr_time = int(calculate_arrival_time(
+        data.CRSDepTime,
+        elapsed_time)
+    )
 
     dep_time = convert_time_to_float(data.CRSDepTime)
-    arr_time = convert_time_to_float(data.CRSArrTime)
+
+    arr_time = convert_time_to_float(calculated_arr_time)
     
     dep_period = get_period(dep_time)
     arr_period = get_period(arr_time)
@@ -76,12 +104,7 @@ def preprocess_input(data):
     # Distance auto lookup
     distance = route_distance.get(
         (data.Origin, data.Dest),
-        1000
-    )
-    
-    elapsed_time = route_elapsed.get(
-        (data.Origin, data.Dest),
-        180
+        500
     )
     
     df = pd.DataFrame([
@@ -124,7 +147,7 @@ def preprocess_input(data):
 
     X = hstack([X_num, X_cat])
 
-    return X, distance, dep_period, arr_period
+    return X, distance, dep_period, arr_period, elapsed_time, calculated_arr_time
 
 
 # SELECT MODEL FOR PREDICTING
@@ -156,11 +179,8 @@ def predict(data: FlightInput):
     
     if not valid_time(data.CRSDepTime):
         return {'error': 'Invalid Departure Time'}
-    
-    if not valid_time(data.CRSArrTime):
-        return { 'error': 'Invalid Arrival Time'}
         
-    X, distance, dep_period, arr_period = preprocess_input(data)
+    X, distance, dep_period, arr_period, elapsed_time, calculated_arr_time = preprocess_input(data)
 
     model = get_model(data.model_name)
 
@@ -181,7 +201,9 @@ def predict(data: FlightInput):
         'prediction': int(prediction),
         'probability_delay': round(float(probability), 4),
         'distance': round(float(distance), 2),
-        'departure_period': dep_period,
-        'arrival_period': arr_period,
+        'CRS_departure_period': dep_period,
+        'CRS_arrival_period': arr_period,
+        'CRS_elapsed_time': elapsed_time,
+        'calculated_arrival_time': calculated_arr_time,
         'message': 'Delayed' if prediction == 1 else 'On Time'
     }
