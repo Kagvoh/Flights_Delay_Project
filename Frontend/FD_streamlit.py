@@ -396,7 +396,7 @@ def main():
             st.divider()
 
             # INPUT ROWS
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4, col5 = st.columns(5)
 
             with col1:
                 month = st.selectbox('Month', list(range(1, 13)))
@@ -411,18 +411,22 @@ def main():
                 dep_time = st.number_input(
                     'CRS Departure Time',0,2359,0
                 )
-
+            
+            with col5:
+                arr_time = st.number_input(
+                    'CRS Arrival Time',0,2359,0
+                )
 
             # SECOND ROW
-            col5, col6, col7 = st.columns(3)
-
-            with col5:
-                carrier = st.selectbox('Airline', airline_list)
+            col6, col7, col8 = st.columns(3)
 
             with col6:
-                origin = st.selectbox('Origin Airport', origin_list)
+                carrier = st.selectbox('Airline', airline_list)
 
             with col7:
+                origin = st.selectbox('Origin Airport', origin_list)
+
+            with col8:
                 dest = st.selectbox('Destination Airport', dest_list)
 
             st.divider()
@@ -437,6 +441,7 @@ def main():
                     'DayofMonth': day,
                     'DayOfWeek': dayofweek,
                     'CRSDepTime': dep_time,
+                    'CRSArrTime' : arr_time,
                     'UniqueCarrier': carrier,
                     'Origin': origin,
                     'Dest': dest,
@@ -490,10 +495,10 @@ def main():
                     7: 'Sunday'
                 }
                 
-                arr_time = f"{result['calculated_arrival_time']:04d}"
+                arr_time_str = f"{arr_time:04d}"
 
                 formatted_arr_time = (
-                    f"{arr_time[:2]}:{arr_time[2:]}"
+                    f"{arr_time_str[:2]}:{arr_time_str[2:]}"
                 )
                 
                 dep_time_str = f"{dep_time:04d}"
@@ -509,7 +514,7 @@ def main():
                 with inf_col1:
                     st.info(
                     f"""
-                        📅 Flight Date: {month}/{day}
+                    📅 Flight Date: {month}/{day}
 
                     🗓 Day Of Week: {day_name_map[dayofweek]}
                     
@@ -517,13 +522,13 @@ def main():
                     
                     ✈ Airline: {carrier}
                     """
-                        )
+                    )
                     
                 with inf_col2:
                     st.info(
                     f"""
-                        🛬 CRS Depature Time:
-                            {formatted_dep_time}
+                    🛬 CRS Depature Time:
+                        {formatted_dep_time}
                                 
                     🛬 CRS Arrival Time:
                         {formatted_arr_time}
@@ -531,7 +536,7 @@ def main():
                     ⏱ Flight Duration:
                         {result['CRS_elapsed_time']:.0f} minutes
                     """
-                        )
+                    )
 
                 top1, top2 = st.columns(2)
                 with top1:
