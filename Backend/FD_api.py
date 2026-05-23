@@ -22,7 +22,6 @@ scaler = joblib.load('models/scaler.pkl')
 encoder = joblib.load('models/encoder.pkl')
 
 route_distance = joblib.load('models/route_distance.pkl')
-route_elapsed = joblib.load('models/route_elapsed.pkl')
 
 
 # INPUT SCHEMA
@@ -32,7 +31,8 @@ class FlightInput(BaseModel):
     DayOfWeek: int
 
     CRSDepTime: int
-
+    CRSArrTime: int
+    
     UniqueCarrier: str
     Origin: str
     Dest: str
@@ -44,23 +44,23 @@ class FlightInput(BaseModel):
 def convert_time_to_float(time_str):
     return time_str // 100 + (time_str % 100 )/ 60
 
-def calculate_arrival_time(dep_time, elapsed_minutes):
+def calculate_elapsed_time(dep_time, arr_time):
 
     dep_hour = dep_time // 100
     dep_min = dep_time % 100
+    
+    arr_hour = arr_time // 100
+    arr_min = arr_time % 100
 
-    total_minutes = (
-        dep_hour * 60
-        + dep_min
-        + elapsed_minutes
-    )
+    dep_total = dep_hour*60 + dep_min
+    arr_total = arr_hour*60 + arr_min
 
-    total_minutes %= 1440
+    elapsed_time = arr_total - dep_total
 
-    arr_hour = total_minutes // 60
-    arr_min = total_minutes % 60
-
-    return arr_hour * 100 + arr_min
+    if(elapsed_time < 0):
+        elapsed_time += 1440
+        
+    return elapsed_time
 
 def valid_time(t):
 
@@ -84,19 +84,14 @@ def get_period(time):
 
 def preprocess_input(data):
     
-    elapsed_time = int(route_elapsed.get(
-        (data.Origin, data.Dest),
-        180)
-    )
-
-    calculated_arr_time = int(calculate_arrival_time(
+    elapsed_time = calculate_elapsed_time(
         data.CRSDepTime,
-        elapsed_time)
+        data.CRSArrTime
     )
 
     dep_time = convert_time_to_float(data.CRSDepTime)
 
-    arr_time = convert_time_to_float(calculated_arr_time)
+    arr_time = convert_time_to_float(data.CRSArrTime)
     
     dep_period = get_period(dep_time)
     arr_period = get_period(arr_time)
@@ -147,7 +142,7 @@ def preprocess_input(data):
 
     X = hstack([X_num, X_cat])
 
-    return X, distance, dep_period, arr_period, elapsed_time, calculated_arr_time
+    return X, distance, dep_period, arr_period, elapsed_time
 
 
 # SELECT MODEL FOR PREDICTING
@@ -179,8 +174,11 @@ def predict(data: FlightInput):
     
     if not valid_time(data.CRSDepTime):
         return {'error': 'Invalid Departure Time'}
+    
+    if not valid_time(data.CRSArrTime):
+        return {'error': 'Invalid Arrival Time'}
         
-    X, distance, dep_period, arr_period, elapsed_time, calculated_arr_time = preprocess_input(data)
+    X, distance, dep_period, arr_period, elapsed_time = preprocess_input(data)
 
     model = get_model(data.model_name)
 
@@ -204,6 +202,5 @@ def predict(data: FlightInput):
         'CRS_departure_period': dep_period,
         'CRS_arrival_period': arr_period,
         'CRS_elapsed_time': elapsed_time,
-        'calculated_arrival_time': calculated_arr_time,
         'message': 'Delayed' if prediction == 1 else 'On Time'
     }
