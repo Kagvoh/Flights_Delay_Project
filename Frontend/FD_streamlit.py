@@ -471,15 +471,6 @@ def main():
                 
                 prob = result['probability_delay'] * 100
 
-                if prob < 40:
-                    st.success('🟢 Low Delay Risk')
-
-                elif prob < 70:
-                    st.warning('🟡 Moderate Delay Risk')
-
-                else:
-                    st.error('🔴 High Delay Risk')
-
                 if result['prediction'] == 1:
                     st.error('⚠️ Flight likely DELAYED')
                 else:
@@ -518,7 +509,7 @@ def main():
 
                     🗓 Day Of Week: {day_name_map[dayofweek]}
                     
-                    🗺 Route: {origin} ✈ {dest}
+                    🌍 Route: {origin} → {dest}
                     
                     ✈ Airline: {carrier}
                     """
@@ -527,14 +518,17 @@ def main():
                 with inf_col2:
                     st.info(
                     f"""
-                    🛬 CRS Depature Time:
+                    🛬 CRS Departure Time:
                         {formatted_dep_time}
                                 
                     🛬 CRS Arrival Time:
                         {formatted_arr_time}
 
-                    ⏱ Flight Duration:
+                    🕒 Flight Duration:
                         {result['CRS_elapsed_time']:.0f} minutes
+                    
+                    📍 Distance:
+                        {result['distance']:.0f} miles
                     """
                     )
 
@@ -542,15 +536,25 @@ def main():
                 with top1:
                     st.metric(
                         'Delay Probability',
-                        f"{result['probability_delay'] * 100:.2f}%"
-                    )
-
-                with top2:
-                    st.metric(
-                        'Distance',
-                        f"{result['distance']:.0f} miles"
+                        f"{prob:.2f}%"
                     )
                     
+                with top2:
+                    if prob < 40:
+                        st.metric(
+                            "Delay Risk", "Low"
+                        )
+
+                    elif prob < 70:
+                        st.metric(
+                            "Delay Risk", "Moderate"
+                        )
+
+                    else:
+                        st.metric(
+                            "Delay Risk","High"
+                        )
+
                 bottom1, bottom2 = st.columns(2)
                 
                 with bottom1:
