@@ -1,15 +1,17 @@
-✈️ Flights Delay Prediction Project
+# Flights Delay Prediction Project
+
 This is my first Machine Learning project to predict airline flight delays. The model is trained using a Jupyter Notebook, and its performance is demonstrated through a web application built with FastAPI and Streamlit.
 
 # A Machine Learning project for predicting airline flight delays using multiple classification models.
+
 This project provides:
      - FastAPI Backend → serves trained ML models through REST APIs.
      - Streamlit Frontend → interactive web interface for user prediction.
      - Machine Learning Models → trained using Python and Scikit-learn.
 
-# Dataset: https://www.kaggle.com/datasets/giovamata/airlinedelaycauses
+Dataset: https://www.kaggle.com/datasets/giovamata/airlinedelaycauses
 
-📂 Project Structure:
+# Project Structure:
 ```
         Flights_Delay_Project/
         │
@@ -28,9 +30,9 @@ This project provides:
         ├── LICENSE
         └── .gitignore
 ```
-# Instructions: You need to create this folder "Flight_Delay_Project/Backend/Models" first, then when you run Notebook File, the .pkl files will be loaded into that folder.
+Instructions: You need to create this folder "Flight_Delay_Project/Backend/Models" first, then when you run Notebook File, the .pkl files will be loaded into that folder.
 
-🚀 Technologies Used
+# Technologies Used
 # Backend
 ```
     - Python
@@ -50,20 +52,21 @@ This project provides:
   - Random Forest
   - XGBoost / Gradient Boosting (if used)
 ```
-📌 Requirements
+# Requirements
 Before running the project, make sure you have:
 Python 3.10+ installed
 pip installed
 Git installed (optional)
 
-⚙️ Installation Guide
-# Clone Repository
+# Installation Guide
+Clone Repository
 ```bash
     git clone https://github.com/Kagvoh/Flights_Delay_Project.git
     Move into project folder: cd Flights_Delay_Project
 ```
 
-🔥 FastAPI Backend
+# FastAPI Backend
+
 What is FastAPI?
 FastAPI is a modern Python framework used to build high-performance REST APIs quickly and efficiently.
 In this project, FastAPI is responsible for:
@@ -71,14 +74,16 @@ In this project, FastAPI is responsible for:
 - Receiving user input
 - Performing predictions
 - Returning prediction results as JSON
+
 # Instructions:
 Then, start the FastAPI app:
 ```bash
     uvicorn main:app --reload
 ```
-# The API documentation can be accessed at http://localhost:8000/docs.
+The API documentation can be accessed at http://localhost:8000/docs.
 
-🎨 Streamlit Frontend
+# Streamlit Frontend
+
 What is Streamlit?
 Streamlit is a Python framework used to create interactive web applications for Machine Learning projects with minimal code.
 In this project, Streamlit is used for:
@@ -92,7 +97,7 @@ In this project, Streamlit is used for:
   ```
 # The web interface can be accessed at http://localhost:8501.
 
-🔄 Web demo Workflow 
+# Web demo Workflow 
 ```
     User Input
         ↓
@@ -106,6 +111,7 @@ In this project, Streamlit is used for:
         ↓
     Display on Streamlit
 ```
+
 # Overal Project Pipline:
 ```
 Dataset -> Data Preprocessing -> Feature Engineering -> Model Training
