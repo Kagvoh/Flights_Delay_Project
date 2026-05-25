@@ -71,6 +71,7 @@ Clone Repository
 # FastAPI Backend
 
 What is FastAPI?
+
 FastAPI is a modern Python framework used to build high-performance REST APIs quickly and efficiently.
 In this project, FastAPI is responsible for:
 - Loading trained ML models
@@ -84,10 +85,12 @@ Then, start the FastAPI app:
     uvicorn main:app --reload
 ```
 The API documentation can be accessed at http://localhost:8000/docs.
+# Reference: https://fastapi.tiangolo.com
 
 # Streamlit Frontend
 
 What is Streamlit?
+
 Streamlit is a Python framework used to create interactive web applications for Machine Learning projects with minimal code.
 In this project, Streamlit is used for:
 - User input interface
@@ -99,6 +102,7 @@ In this project, Streamlit is used for:
       streamlit run streamlit_app/main.py
   ```
 # The web interface can be accessed at http://localhost:8501.
+# Reference: https://streamlit.io/#install
 
 # Web demo Workflow 
 ```
