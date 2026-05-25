@@ -85,7 +85,7 @@ Then, start the FastAPI app:
     uvicorn main:app --reload
 ```
 The API documentation can be accessed at http://localhost:8000/docs.
-# Reference: https://fastapi.tiangolo.com
+Reference: https://fastapi.tiangolo.com
 
 # Streamlit Frontend
 
@@ -101,8 +101,8 @@ In this project, Streamlit is used for:
   ```bash
       streamlit run streamlit_app/main.py
   ```
-# The web interface can be accessed at http://localhost:8501.
-# Reference: https://streamlit.io/#install
+The web interface can be accessed at http://localhost:8501.
+Reference: https://streamlit.io/#install
 
 # Web demo Workflow 
 ```
