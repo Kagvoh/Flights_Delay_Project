@@ -54,8 +54,11 @@ Instructions: You need to create this folder "Flight_Delay_Project/Backend/Model
 ```
 # Requirements
 Before running the project, make sure you have:
+
 Python 3.10+ installed
+
 pip installed
+
 Git installed (optional)
 
 # Installation Guide
