@@ -2,7 +2,7 @@
 
 This is my first Machine Learning project to predict airline flight delays. The model is trained using a Jupyter Notebook, and its performance is demonstrated through a web application built with FastAPI and Streamlit.
 
-# A Machine Learning project for predicting airline flight delays using multiple classification models.
+# A Machine Learning project for predicting airline flight delays using classification models.
 
 This project provides:
      - FastAPI Backend → serves trained ML models through REST APIs.
